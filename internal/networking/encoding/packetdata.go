@@ -1,37 +1,4 @@
-package protocol
-
-import (
-	"github.com/Hedwig7s/Burrowing-Classic/lib/networking/codec"
-)
-
-type PacketID byte
-
-const (
-	PacketID_Identification = iota
-	PacketID_Ping
-	PacketID_LevelInitialize
-	PacketID_LevelDataChunk
-	PacketID_LevelFinalize
-	PacketID_SetBlockServerbound
-	PacketID_SetBlockClientbound
-	PacketID_SpawnPlayer
-	PacketID_SetPositionAndOrientation
-	PacketID_PositionAndOrientationUpdate
-	PacketID_PositionUpdate
-	PacketID_OrientationUpdate
-	PacketID_DespawnPlayer
-	PacketID_Message
-	PacketID_DisconnectPlayer
-	PacketID_UpdateUserType
-)
-
-type Packet interface {
-	ID() PacketID
-	EncodeTo(writer *codec.PacketWriter) error
-	DecodeFrom(reader *codec.PacketReader) error
-	Data() any
-	Size() int
-}
+package encoding
 
 type IdentificationData struct {
 	ProtocolVersion byte

@@ -8,7 +8,8 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/Hedwig7s/Burrowing-Classic/lib/networking"
+	"github.com/Hedwig7s/Burrowing-Classic/internal/networking/server"
+	"github.com/Hedwig7s/Burrowing-Classic/internal/servercontext"
 )
 
 func main() {
@@ -20,12 +21,16 @@ func main() {
 
 	errCh := make(chan error, 1)
 
-	server := networking.NewServer("0.0.0.0", 25564)
+	serverCtx := servercontext.DefaultServerContext()
 
-	defer server.Close()
-	wg.Go(func() {
-		errCh <- server.Start(ctx)
-	})
+	srv := server.NewServer("0.0.0.0", 25564, serverCtx)
+
+	defer srv.Close()
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		errCh <- srv.Start(ctx)
+	}()
 
 	select {
 	case <-ctx.Done():
